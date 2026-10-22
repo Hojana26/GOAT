@@ -213,6 +213,8 @@ body.locked{overflow:hidden}
 @keyframes rfall{0%{transform:translate3d(0,0,0) rotate(0) rotateY(0);opacity:0}8%{opacity:1}25%{transform:translate3d(var(--s),28vh,0) rotate(90deg) rotateY(160deg)}50%{transform:translate3d(calc(var(--s)*-.6),58vh,0) rotate(200deg) rotateY(340deg)}75%{transform:translate3d(var(--s),88vh,0) rotate(290deg) rotateY(520deg)}100%{transform:translate3d(calc(var(--s)*-.4),118vh,0) rotate(380deg) rotateY(700deg);opacity:.9}}
 .rclick{position:fixed;z-index:99998;pointer-events:none;font-weight:700;color:var(--gold);text-shadow:0 0 8px #FFC400aa,2px 2px 0 #000;will-change:transform;animation:rdrop ease-in forwards}
 @keyframes rdrop{0%{transform:translate3d(0,0,0) rotate(0) rotateY(0) scale(.4);opacity:0}10%{opacity:1;transform:translate3d(calc(var(--s)*.2),-30px,0) rotate(30deg) rotateY(60deg) scale(1)}35%{transform:translate3d(var(--s),calc(var(--h)*.3),0) rotate(130deg) rotateY(240deg)}65%{transform:translate3d(calc(var(--s)*-.7),calc(var(--h)*.62),0) rotate(250deg) rotateY(440deg)}100%{transform:translate3d(calc(var(--s)*.5),var(--h),0) rotate(380deg) rotateY(700deg);opacity:.9}}
+.snd{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:99990;width:46px;height:46px;border-radius:50%;border:3px solid #000;background:var(--gold);font-size:22px;line-height:1;cursor:pointer;box-shadow:3px 3px 0 var(--hot);padding:0}
+.snd:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--hot)}
 </style>
 </head>
 <body>
@@ -396,6 +398,31 @@ var d=2.6+Math.random()*2;
 e.style.cssText='left:'+(x+(Math.random()*80-40))+'px;top:'+(y+(Math.random()*20-10))+'px;font-size:'+(18+Math.random()*24)+'px;--s:'+((Math.random()*140)-70)+'px;--h:'+(innerHeight-y+80)+'px;animation-duration:'+d+'s';
 document.body.appendChild(e);setTimeout(function(){e.remove()},d*1000+200)},i*60)})(i)}
 });
+})();
+</script>
+<button type="button" class="snd" id="snd" aria-label="Sound on or off" title="Sound on/off">🔊</button>
+<script>
+(function(){
+var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+var ctx=null,on=true,btn=document.getElementById('snd');
+function c(){if(!ctx)ctx=new AC();if(ctx.state==='suspended')ctx.resume();return ctx}
+function tone(f,t0,dur,type,vol){var a=c(),o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;
+g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(vol,t0+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+dur+0.05)}
+function coin(v){if(!on)return;var a=c(),t=a.currentTime;v=v||0.12;tone(988,t,0.09,'square',v);tone(1319,t+0.08,0.35,'square',v)}
+var last=0;
+function say(txt,force){if(!on||!window.speechSynthesis)return;var n=Date.now();if(!force&&n-last<1800)return;last=n;
+try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=.9;u.pitch=.7;u.volume=1;u.lang='en-IN';speechSynthesis.speak(u)}catch(e){}}
+function fanfare(){if(!on)return;var a=c(),t=a.currentTime,n=[523,659,784,1047,784,1047,1319];
+n.forEach(function(f,i){tone(f,t+i*0.11,i===n.length-1?0.7:0.18,'triangle',0.22);tone(f*2,t+i*0.11,0.15,'sine',0.06)})}
+btn.addEventListener('click',function(e){e.stopPropagation();on=!on;btn.textContent=on?'🔊':'🔇';if(!on&&window.speechSynthesis)speechSynthesis.cancel();if(on)coin(0.1)});
+var ok=document.getElementById('oathOk');
+if(ok)ok.addEventListener('click',function(){fanfare();setTimeout(function(){say('GOAT Deepankar',true)},350);var n=0,t=setInterval(function(){coin(0.05);if(++n>10)clearInterval(t)},550)});
+document.addEventListener('click',function(e){
+var o=document.getElementById('oath');if(o&&o.classList.contains('on'))return;
+if(e.target.closest('#snd'))return;
+coin();say('GOAT Deepankar');setTimeout(function(){coin(0.07)},160);setTimeout(function(){coin(0.05)},320)
+},true);
 })();
 </script>
 </body>
