@@ -377,10 +377,10 @@ function rain(){
 if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 var n=0,t=setInterval(function(){
 for(var k=0;k<2;k++){var e=document.createElement('span');e.className='rupee';e.textContent=S[Math.floor(Math.random()*S.length)];
-var d=5+Math.random()*4;
+var d=1+Math.random()*.4;
 e.style.cssText='left:'+Math.random()*96+'%;font-size:'+(20+Math.random()*26)+'px;--s:'+((Math.random()*120)-60)+'px;animation-duration:'+d+'s';
 document.body.appendChild(e);(function(x){setTimeout(function(){x.remove()},d*1000+200)})(e)}
-if(++n>90)clearInterval(t)},150);
+if(++n>9)clearInterval(t)},80);
 }
 ok.addEventListener('click',function(){o.classList.remove('on');document.body.classList.remove('locked');rain()});
 })();
@@ -394,9 +394,9 @@ var o=document.getElementById('oath');if(o&&o.classList.contains('on'))return;
 var x=ev.clientX,y=ev.clientY;
 for(var i=0;i<12;i++){(function(i){setTimeout(function(){
 var e=document.createElement('span');e.className='rclick';e.textContent=S[Math.floor(Math.random()*S.length)];
-var d=2.6+Math.random()*2;
+var d=1.2+Math.random()*.4;
 e.style.cssText='left:'+(x+(Math.random()*80-40))+'px;top:'+(y+(Math.random()*20-10))+'px;font-size:'+(18+Math.random()*24)+'px;--s:'+((Math.random()*140)-70)+'px;--h:'+(innerHeight-y+80)+'px;animation-duration:'+d+'s';
-document.body.appendChild(e);setTimeout(function(){e.remove()},d*1000+200)},i*60)})(i)}
+document.body.appendChild(e);setTimeout(function(){e.remove()},d*1000+200)},i*30)})(i)}
 });
 })();
 </script>
@@ -417,7 +417,7 @@ function fanfare(){if(!on)return;var a=c(),t=a.currentTime,n=[523,659,784,1047,7
 n.forEach(function(f,i){tone(f,t+i*0.11,i===n.length-1?0.7:0.18,'triangle',0.22);tone(f*2,t+i*0.11,0.15,'sine',0.06)})}
 btn.addEventListener('click',function(e){e.stopPropagation();on=!on;btn.textContent=on?'🔊':'🔇';if(!on&&window.speechSynthesis)speechSynthesis.cancel();if(on)coin(0.1)});
 var ok=document.getElementById('oathOk');
-if(ok)ok.addEventListener('click',function(){fanfare();setTimeout(function(){say('GOAT Deepankar',true)},350);var n=0,t=setInterval(function(){coin(0.05);if(++n>10)clearInterval(t)},550)});
+if(ok)ok.addEventListener('click',function(){fanfare();setTimeout(function(){say('GOAT Deepankar',true)},350);var n=0,t=setInterval(function(){coin(0.05);if(++n>3)clearInterval(t)},450)});
 document.addEventListener('click',function(e){
 var o=document.getElementById('oath');if(o&&o.classList.contains('on'))return;
 if(e.target.closest('#snd'))return;
